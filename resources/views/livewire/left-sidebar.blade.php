@@ -11,11 +11,13 @@
             <li class="mb-1">
                 <a href="#" wire:click.prevent="selectGroup('Urgent')">Urgent</a>
 
-            <li class="mb-1">
-                @foreach($groups as $group)
-                    <button wire:click="selectGroup('{{ $group->id }}')">{{ $group->name }}</button>
+
+            @foreach($groups as $group)
+                <li wire:click="selectGroup('{{ $group->name }}')" class="cursor-pointer">
+                    {{ $group->name }}
+                </li>
                 @endforeach
-            </li>
+
 
         </ul>
     </div>

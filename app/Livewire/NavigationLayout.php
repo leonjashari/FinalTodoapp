@@ -2,14 +2,27 @@
 
 namespace App\Livewire;
 
+use App\Models\Task;
 use Livewire\Component;
 
 class NavigationLayout extends Component
 {
+    public $selectedGroup;
 
-    protected $listeners = ['editTask' => 'handleEditTask', 'tasksUpdated' => 'updateTasks'];
+    protected $listeners = ['editTask' => 'handleEditTask', 'tasksUpdated' => 'updateTasks', 'updateGroupTasks' => 'updateGroupTasks', 'refreshComponent' => '$refresh',];
+    public $selectedGroupTasks;
 
     public $tasks; // Add a property to store tasks
+
+
+
+    public function updateGroupTasks($data)
+    {
+        $this->selectedGroup = $data['selectedGroup'];
+        $this->tasks = Task::where('group', $this->selectedGroup)->get();
+
+        $this->dispatch('tasksUpdated', ['tasks' => $this->tasks->toArray()]);
+    }
 
     public function handleEditTask($taskId)
     {
@@ -31,6 +44,8 @@ class NavigationLayout extends Component
 //    }
     public function render()
     {
-        return view('livewire.layout.navigation');
+        return view('livewire.layout.navigation', [
+            'tasks' => $this->tasks,
+        ]);
     }
 }

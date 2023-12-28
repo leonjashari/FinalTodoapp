@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('assigned_user_id')->constrained('users', 'id');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('group');
-            $table->boolean('urgent')->default(false);
+            $table->string('group')->nullable(); // Allow NULL values
+            $table->boolean('urgent')->nullable()->default(false);
             $table->timestamps();
             $table->string('status')->default('Todo');
 
@@ -28,6 +29,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::table('tasks', function (Blueprint $table) {
+            // Remove the foreign key column
+            $table->dropForeign(['assigned_user_id']);
+            $table->dropColumn('assigned_user_id');
+        });
     }
 };

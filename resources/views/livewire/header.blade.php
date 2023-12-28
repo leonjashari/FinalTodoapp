@@ -5,11 +5,11 @@
                 <!-- Logo, Home Link, or Other Branding -->
                 <div class="flex items-center">
                     <!-- Add your logo or branding here -->
-                    <a href="{{ route('dashboard') }}" class="text-xl font-bold text-gray-800 dark:text-white">To Do</a>
+                    <a href="#" wire:click.prevent="navigateTo('dashboard')" class="text-xl font-bold text-gray-800 dark:text-white">To Do</a>
                 </div>
                 <div class="flex items-center">
                     <!-- Add your logo or branding here -->
-                    <a href="{{ route('tasks.index') }}" class="text-xl font-bold text-gray-800 dark:text-white">Done</a>
+                    <a href="#" wire:click.prevent="navigateTo('tasks.index')" class="text-xl font-bold text-gray-800 dark:text-white">Done</a>
                 </div>
 
 

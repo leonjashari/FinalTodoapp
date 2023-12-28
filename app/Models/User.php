@@ -42,4 +42,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // Define the one-to-many relationship with tasks
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_user_id'); // Replace 'assigned_user_id' with your actual foreign key column name
+    }
 }

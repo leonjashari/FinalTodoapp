@@ -15,13 +15,15 @@ class TaskForm extends Component
     public $groups;
 
     // Fetch groups from the database or any other source
+    public $groupId;
+
     public function mount()
     {
         // Fetch groups as objects from the Group model
         $this->groups = Group::all();
     }
 
-    // Add the method to create a task
+    // method to create a task
     public function createTask()
     {
         // Validate form fields (you can add more validation rules)
@@ -31,26 +33,42 @@ class TaskForm extends Component
             'group' => 'required|string',
             'urgent' => 'boolean',
         ]);
-
-        // Get the group id based on the selected group name
-        $groupId = Group::where('name', $this->group)->value('id');
-
-
-        // Create a new task
-        Task::create([
+        // Debugging: Add the following line to log the submitted data
+        logger('Submitted Data:', [
             'title' => $this->title,
             'description' => $this->description,
             'group' => $this->group,
-            'group_id' => $groupId, // Set the group_id
+            'urgent' => $this->urgent,
+        ]);
+
+        // Get the group id based on the selected group name
+        $group = Group::where('name', 'like', '%' . trim($this->group) . '%')->first();
+        // Debugging: Add the following lines to log information
+        logger("Selected Group: {$this->group}");
+        logger("Retrieved Group ID: " . ($group ? $group->id : 'Not Found'));
+
+        // Create a new task
+        auth()->user()->tasks()->create([
+            'title' => $this->title,
+            'description' => $this->description,
+            'group' => $this->group,
+//            'group_id' => $this->group, // Set the group_id
+            'group_id' => $group ? $group->id : null,
             'urgent' => $this->urgent,
             'status' => 'Todo',
         ]);
+//        // Debugging: Add the following line to log the created task
+//        logger('Task created:', [
+//            'title' => $this->title,
+//            'group_id' => $group ? $group->id : null,
+//        ]);
 
         // Clear form fields after creating the task
         $this->title = '';
         $this->description = '';
         $this->group = '';
         $this->urgent = false;
+        $this->urgentChecked = false;
 
 
         if ($this->urgentChecked) {
@@ -58,14 +76,23 @@ class TaskForm extends Component
             $this->group = 'Urgent';
         }
 
-        // Dispatch a browser event to update tasks in the main content
-        $this->dispatch('refreshComponent');
+
+//        // Dispatch a browser event to update tasks in the main content
+        $this->dispatch('refreshComponent'); // Notify other components
+        $this->dispatch('taskCreated');
+
 
         // Flash a success message
         session()->flash('message', 'Task created successfully!');
     }
 
     public $urgentChecked = false;
+
+    public function resetForm()
+    {
+        // Reset form fields
+        $this->reset('title', 'description', 'group', 'urgent', 'urgentChecked');
+    }
 
 
     public function render()

@@ -14,6 +14,8 @@ class LeftSidebar extends Component
     public $groups;
     public $selectedGroup;
 
+    public $tasks;
+
     protected $listeners = ['updateTasks'];
 
     public function mount()
@@ -37,17 +39,33 @@ class LeftSidebar extends Component
         // Fetch the updated list of groups
         $this->groups = $this->fetchGroups();
     }
+
+    protected function fetchGroups()
+    {
+        // Fetch groups dynamically from the database
+        $groups = Group::all();
+
+        // Check if $groups is null or empty before returning
+        if (!$groups || $groups->isEmpty()) {
+            $groups = collect(); // Initialize an empty collection if $groups is null
+        }
+
+        return $groups;
+    }
+
     public function selectGroup($groupId)
     {
         $this->selectedGroup = $groupId;
 
-        // Dispatch a browser event to update tasks in the main content
-        $this->dispatch('updateTasks', ['groupId' => $groupId]);
+        // Fetch tasks for the selected group
+        $this->tasks = Task::where('group_id', $groupId)->get();
+
+        // Emit an event to update the main content with tasks for the selected group
+        $this->dispatch('tasksUpdated', ['tasks' => $this->tasks->toArray()]);
     }
-    protected function fetchGroups()
-    {
-        // Fetch groups dynamically from the database
-        return Group::all(); // Assuming you have a Group model with "id" and "name" columns
-    }
+//    public function selectGroup($groupName)
+//    {
+//        $this->dispatch('updateGroupTasks', ['selectedGroup' => $groupName]);
+//    }
 
 }

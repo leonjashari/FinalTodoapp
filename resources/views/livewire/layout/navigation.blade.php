@@ -46,4 +46,5 @@ new class extends Component
             <livewire:task-form />
         </div>
     </div>
+
 </div>
