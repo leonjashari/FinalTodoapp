@@ -1,34 +1,39 @@
 <div>
     <h2 class="text-2xl font-bold mb-4">Task List</h2>
 
-    @if ($tasks->isNotEmpty())
+    @if ($tasks->isEmpty())
+        <p>No tasks available.</p>
+    @else
+        {{-- Uncomment the line below for debugging --}}
+        {{-- <pre>{{ dd($tasks) }}</pre> --}}
         <ul class="divide-y divide-gray-300">
             @foreach($tasks as $task)
                 <li class="py-4 relative
-                    @if($editingTaskId == $task->id) border border-blue-300 @endif
-                    @if($selectedTaskId == $task->id) border border-blue-500 @endif"
+        @if($editingTaskId == $task->id) border border-blue-300 @endif
+        @if($selectedTaskId == $task->id) border border-blue-500 @endif"
                     wire:click="selectTask({{ $task->id }})"
                 >
+
+                    <!-- Task content -->
                     <div class="flex items-center justify-between space-x-4">
                         <div class="flex space-x-2 items-center">
+                            <div>
+                                <!-- Circle for Marking as Done -->
+                                <input type="checkbox" wire:click="markAsDone({{ $task->id }})" class="form-checkbox h-4 w-4 text-blue-500 rounded-full">
+                            </div>
+                            <!-- Task title -->
                             <h3 class="text-lg font-semibold @if($editingTaskId == $task->id) font-bold text-blue-500 @endif">{{ $task->title }}</h3>
 
+                            <!-- Task group -->
                             <div class="bg-gray-200 p-2 rounded-md">
-                                {{-- Display group name --}}
                                 <p class="text-sm text-gray-500">{{ is_string($task->group) ? $task->group : ($task->group ? $task->group->name : 'No Group') }}</p>
-
-                                {{-- If task is urgent, display "Urgent" in red --}}
                                 @if($task->urgent)
                                     <span class="text-sm text-red-500 bg-red-200 px-2 rounded-md">Urgent</span>
                                 @endif
                             </div>
                         </div>
 
-                        @if($editingTaskId == $task->id)
-                            <textarea class="mt-2 text-gray-500 border rounded-md p-2" wire:model="description" placeholder="Here Task Description"></textarea>
-                            <button wire:click="updateTask({{ $task->id }})" class="text-blue-500">Update</button>
-                        @endif
-
+                        <!-- Edit and delete buttons -->
                         <div class="flex space-x-2">
                             <button wire:click="editTask({{ $task->id }})" class="text-blue-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5">
@@ -45,8 +50,6 @@
                 </li>
             @endforeach
         </ul>
-        {{ $tasks->links() }}
-    @else
-        <p>No tasks available.</p>
     @endif
+
 </div>

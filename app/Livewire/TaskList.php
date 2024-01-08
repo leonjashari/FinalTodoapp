@@ -7,14 +7,12 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
-use Livewire\WithPagination;
+
 
 class TaskList extends Component
 {
 
-use WithPagination;
-//    public $perPage = 5; // Set the number of tasks per page
-//    public $tasks; // Add a property to store tasks
+    public $tasks; // Add a property to store tasks
     public $editingTaskId;
     public $description;
     public $selectedTaskId;
@@ -25,14 +23,7 @@ use WithPagination;
 
     public function mount()
     {
-        // Check if the user is authenticated
-        if (Auth::check()) {
-            // Fetch tasks for the authenticated user
-            $this->tasks = Task::where('assigned_user_id', Auth::id())->get();
-        } else {
-            // User is not authenticated, set $tasks to an empty collection or handle it as needed
-            $this->tasks = collect();
-        }
+        $this->tasks = auth()->user()->tasks()->with('group')->get(); // Fetch tasks with relationship
         $this->selectedTaskId = null;
     }
 
@@ -113,7 +104,7 @@ use WithPagination;
     public function render()
     {
         return view('livewire.task-list', [
-            'tasks' => auth()->user()->tasks()->with('group')->paginate(5),
+            'tasks' => $this->tasks, // Pass the already fetched tasks
         ]);
     }
 

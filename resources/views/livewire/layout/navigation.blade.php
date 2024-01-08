@@ -34,7 +34,7 @@ new class extends Component
         <div class="flex-1 bg-gray-200 dark:bg-gray-900 overflow-hidden">
 
 
-            <div class="flex-1 bg-gray-200 dark:bg-gray-900 overflow-hidden">
+            <div class="max-h-[400px] overflow-y-auto">
                 <!-- Include the TaskList Livewire component -->
                 <livewire:task-list />
 
