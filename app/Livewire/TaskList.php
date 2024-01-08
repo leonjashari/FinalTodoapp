@@ -17,6 +17,9 @@ class TaskList extends Component
     public $description;
     public $selectedTaskId;
 
+    public $editingTitle = '';
+
+
 
 
     protected $listeners = ['taskCreated' => 'refreshTaskList'];
@@ -30,10 +33,17 @@ class TaskList extends Component
 
     public function editTask($taskId)
     {
-        // Implement logic to set the task as editable
         $this->editingTaskId = $taskId;
-        $this->selectedTaskId = $taskId;
+        $task = Task::find($taskId); // Fetch the task
+        $this->editingTitle = $task->title; // Set the initial editing title
+    }
 
+    public function updateTaskTitle($taskId)
+    {
+        $task = Task::find($taskId);
+        $task->update(['title' => $this->editingTitle]);
+        $this->editingTaskId = null; // Exit editing mode
+        $this->editingTitle = ''; // Reset the title
     }
     public function resetEditingState()
     {

@@ -9,7 +9,7 @@
         <ul class="divide-y divide-gray-300">
             @foreach($tasks as $task)
                 <li class="py-4 relative
-        @if($editingTaskId == $task->id) border border-blue-300 @endif
+        @if ($editingTaskId == $task->id)  border border-blue-300 @endif
         @if($selectedTaskId == $task->id) border border-blue-500 @endif"
                     wire:click="selectTask({{ $task->id }})"
                 >
@@ -22,7 +22,14 @@
                                 <input type="checkbox" wire:click="markAsDone({{ $task->id }})" class="form-checkbox h-4 w-4 text-blue-500 rounded-full">
                             </div>
                             <!-- Task title -->
-                            <h3 class="text-lg font-semibold @if($editingTaskId == $task->id) font-bold text-blue-500 @endif">{{ $task->title }}</h3>
+                            @if ($editingTaskId == $task->id)
+                                <input type="text" wire:model="editingTitle" class="form-input w-full" placeholder="Enter task title">
+                            @else
+                                <h3 class="text-lg font-semibold">{{ $task->title }}</h3>
+                            @endif
+                            @if ($editingTaskId == $task->id)
+                                <button wire:click="updateTaskTitle({{ $task->id }})" class="btn btn-primary">Save</button>
+                            @endif
 
                             <!-- Task group -->
                             <div class="bg-gray-200 p-2 rounded-md">
