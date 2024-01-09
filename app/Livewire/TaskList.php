@@ -13,6 +13,9 @@ class TaskList extends Component
 {
 
     public $tasks; // Add a property to store tasks
+
+    public $groupId = '';
+    public $selectedStatus = 'Todo';
     public $editingTaskId;
     public $description;
     public $selectedTaskId;
@@ -24,10 +27,21 @@ class TaskList extends Component
 
     protected $listeners = ['taskCreated' => 'refreshTaskList'];
 
+    #[On('groupSelected')]
+    public function groupSelected($group_id)
+    {
+        $this->groupId = $group_id;
+
+        $this->tasks = auth()->user()->tasks()->with('group')
+            ->where('group_id', $group_id)
+            ->get();
+    }
+
     public function mount()
     {
         $this->tasks = auth()->user()->tasks()->with('group')->get(); // Fetch tasks with relationship
         $this->selectedTaskId = null;
+        $this->groupId = '';
     }
 
 
@@ -109,10 +123,35 @@ class TaskList extends Component
     public function selectTask($taskId)
     {
         // Toggle selected task
-        $this->selectedTaskId = ($this->selectedTaskId == $taskId) ? null : $taskId;    }
+        $this->selectedTaskId = ($this->selectedTaskId == $taskId) ? null : $taskId;
+    }
+
+
+    public function showTasks($status)
+    {
+        $this->selectedStatus = $status;
+
+    }
+
+    public function markAsDone($taskId)
+    {
+        Task::find($taskId)->update([
+            'status' => 'Done',
+        ]);
+
+    }
+
 
     public function render()
     {
+
+        $this->tasks = auth()->user()->tasks()->with('group')
+            ->when($this->groupId, function($q) {
+                $q->where('group_id', $this->groupId);
+            })
+            ->where('status', $this->selectedStatus)
+            ->get();
+
         return view('livewire.task-list', [
             'tasks' => $this->tasks, // Pass the already fetched tasks
         ]);

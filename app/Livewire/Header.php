@@ -21,6 +21,12 @@ class Header extends Component
         return redirect()->route($route);
     }
 
+    public function logout()
+    {
+        auth()->logout();
+        $this->redirectRoute('login');
+    }
+
     public function render()
     {
         return view('livewire.header');

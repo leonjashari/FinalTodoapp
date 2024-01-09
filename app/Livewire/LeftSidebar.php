@@ -53,19 +53,13 @@ class LeftSidebar extends Component
         return $groups;
     }
 
-    public function selectGroup($groupId)
+    public function selectGroup($groupName, $groupId)
     {
-        $this->selectedGroup = $groupId;
-
-        // Fetch tasks for the selected group
-        $this->tasks = Task::where('group_id', $groupId)->get();
+        $this->selectedGroup = $groupName;
 
         // Emit an event to update the main content with tasks for the selected group
-        $this->dispatch('tasksUpdated', ['tasks' => $this->tasks->toArray()]);
+        $this->dispatch('groupSelected', ['group_id' => $groupId, 'group_name' => $groupName]);
     }
-//    public function selectGroup($groupName)
-//    {
-//        $this->dispatch('updateGroupTasks', ['selectedGroup' => $groupName]);
-//    }
+
 
 }

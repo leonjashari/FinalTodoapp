@@ -9,11 +9,11 @@
         <h2 class="text-lg font-semibold mb-2">Task Groups</h2>
         <ul class="list-disc pl-5">
             <li class="mb-1">
-                <a href="#" wire:click.prevent="selectGroup('Urgent')">Urgent</a>
+                <a href="#" wire:click.prevent="selectGroup('Urgent', '0')">Urgent</a>
 
 
             @foreach($groups as $group)
-                <li wire:click="selectGroup('{{ $group->name }}')" class="cursor-pointer">
+                <li wire:click.prevent="selectGroup('{{ $group->name }}', '{{ $group->id }}')" class="cursor-pointer">
                     {{ $group->name }}
                 </li>
                 @endforeach

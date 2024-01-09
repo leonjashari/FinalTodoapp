@@ -3,16 +3,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <!-- Logo, Home Link, or Other Branding -->
-                <div class="flex items-center">
-                    <!-- Add your logo or branding here -->
-                    <a href="#" wire:click.prevent="navigateTo('dashboard')" class="text-xl font-bold text-gray-800 dark:text-white">To Do</a>
-                </div>
-                <div class="flex items-center">
-                    <!-- Add your logo or branding here -->
-                    <a href="#" wire:click.prevent="navigateTo('tasks.index')" class="text-xl font-bold text-gray-800 dark:text-white">Done</a>
-                </div>
-
-
+                <div>&nbsp;</div>
 
                 <!-- Navigation Links (if needed) -->
 
