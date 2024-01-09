@@ -8,7 +8,7 @@
         <ul>
             <li class="mb-1">
                 <a href="#" wire:click.prevent="selectGroup('Urgent', '0')"
-                   class="text-red-500 hover:underline flex items-center">
+                   class="text-blue-500 hover:underline flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor" class="w-6 h-6 stroke-current">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
