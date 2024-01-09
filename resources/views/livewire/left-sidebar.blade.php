@@ -47,8 +47,20 @@
         </ul>
     </div>
 
-    <div class="p-4">
-        <input wire:model="newGroupName" type="text" placeholder="New Group Name" class="border p-2">
-        <button wire:click="createGroup" class="bg-blue-500 text-white p-2">Create Group</button>
+    <div x-data="{ open: false }" class="p-4">
+        <div class="flex items-center border p-2 cursor-pointer"
+             x-show="!open" @click="open = true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 4v16m8-8H4"></path>
+            </svg>
+            <span class="ml-2">New Group</span>
+        </div>
+        <div x-show="open" @click.away="open = false">
+            <input wire:model="newGroupName" type="text" placeholder="Write Group Name Here"
+                   class="border p-2">
+            <button wire:click="createGroup" class="bg-blue-500 text-white p-2">Create Group</button>
+        </div>
     </div>
 </div>
