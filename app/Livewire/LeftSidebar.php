@@ -12,7 +12,7 @@ class LeftSidebar extends Component
     public $newGroupName;
     public $urgent;
     public $groups;
-    public $selectedGroup;
+    public $selectedGroup = 'All Tasks';
 
     public $tasks;
 
@@ -34,7 +34,7 @@ class LeftSidebar extends Component
         Group::create(['name' => $this->newGroupName]);
 
         // Clear the input field
-        $this->newGroupName = '';
+        $this->reset('newGroupName', 'urgent');
 
         // Fetch the updated list of groups
         $this->groups = $this->fetchGroups();
@@ -58,7 +58,7 @@ class LeftSidebar extends Component
         $this->selectedGroup = $groupName;
 
         // Emit an event to update the main content with tasks for the selected group
-        $this->dispatch('groupSelected', ['group_id' => $groupId, 'group_name' => $groupName]);
+        $this->dispatch('groupSelected', $groupId, $groupName);
     }
 
 

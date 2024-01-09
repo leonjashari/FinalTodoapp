@@ -15,7 +15,10 @@ class TaskList extends Component
     public $tasks; // Add a property to store tasks
 
     public $groupId = '';
+    public $selectUrgentOnly = false;
     public $selectedStatus = 'Todo';
+
+    public $searchTerm = '';
     public $editingTaskId;
     public $description;
     public $selectedTaskId;
@@ -28,18 +31,22 @@ class TaskList extends Component
     protected $listeners = ['taskCreated' => 'refreshTaskList'];
 
     #[On('groupSelected')]
-    public function groupSelected($group_id)
+    public function groupSelected($group_id, $group_name)
     {
         $this->groupId = $group_id;
+        $this->selectUrgentOnly = $group_id == 0;
 
-        $this->tasks = auth()->user()->tasks()->with('group')
-            ->where('group_id', $group_id)
-            ->get();
+    }
+
+    #[On('searchTasks')]
+    public function searchTasks($value)
+    {
+        $this->searchTerm = $value;
+
     }
 
     public function mount()
     {
-        $this->tasks = auth()->user()->tasks()->with('group')->get(); // Fetch tasks with relationship
         $this->selectedTaskId = null;
         $this->groupId = '';
     }
@@ -146,10 +153,17 @@ class TaskList extends Component
     {
 
         $this->tasks = auth()->user()->tasks()->with('group')
-            ->when($this->groupId, function($q) {
-                $q->where('group_id', $this->groupId);
+            ->when($this->selectUrgentOnly, function($q) {
+                $q->where('urgent', 1);
+            }, function($q) {
+                if($this->groupId) {
+                    $q->where('group_id', $this->groupId);
+                }
             })
             ->where('status', $this->selectedStatus)
+            ->when($this->searchTerm, function($q) {
+                $q->where('title', 'like', '%'. $this->searchTerm .'%');
+            })
             ->get();
 
         return view('livewire.task-list', [

@@ -14,6 +14,11 @@ class SearchBar extends Component
         $this->isOpen = !$this->isOpen;
     }
 
+    public function updatedSearchTerm($value)
+    {
+       $this->dispatch('searchTasks', $value);
+    }
+
     public function render()
     {
         return view('livewire.search-bar');
